@@ -1,2 +1,3 @@
 sed -i "s|VmessUUID|${VmessUUID}|g;s|GLOBAL_PORTAL_PATH|${GLOBAL_PORTAL_PATH}|g" /etc/v2ray/config.json
 exec 2>&1
+exec "$@"
