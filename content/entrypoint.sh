@@ -1,11 +1,11 @@
 #!/bin/sh
 
 # Write dyno start time
-echo $(date +%s) >/workdir/dyno_start_time
+echo $(date +%s) >/workdir/container_start_time
 
 # Restore backup
 RESTORE_BACKUP() {
-    BACKUP=$(curl -4 --retry 4 https://${CLOUDFLARE_WORKERS_HOST}/backup?key=${CLOUDFLARE_WORKERS_KEY} | jq .value)
+    BACKUP=$(curl --retry 4 https://${CLOUDFLARE_WORKERS_HOST}/backup?key=${CLOUDFLARE_WORKERS_KEY} | jq .value | sed "s|\"||g")
     DIR_TMP="$(mktemp -d)"
     echo ${BACKUP} | base64 -d >${DIR_TMP}/backup.tar.gz
     tar -zxf ${DIR_TMP}/backup.tar.gz -C /mnt/data
@@ -17,19 +17,20 @@ RESTORE_BACKUP() {
 
 SEND_TG_MSG() {
     SCRIPT_CONF="/mnt/data/config/script.conf"
-    TELEGRAM_BOT_TOKEN="$(grep ^telegram-bot-token "${SCRIPT_CONF}" | cut -d= -f2-)"
-    TELEGRAM_CHAT_ID="$(grep ^telegram-chat-id "${SCRIPT_CONF}" | cut -d= -f2-)"
-    TG_PROXY="$(grep ^telegram-proxy "${SCRIPT_CONF}" | cut -d= -f2-)"
+    TELEGRAM_BOT_TOKEN="$(grep ^telegram-bot-token "${SCRIPT_CONF}" | cut -d= -f2- | sed "s|^[ \t]*||g;s|\r$||")"
+    TELEGRAM_CHAT_ID="$(grep ^telegram-chat-id "${SCRIPT_CONF}" | cut -d= -f2- | sed "s|^[ \t]*||g;s|\r$||")"
+    TELEGRAM_TITLE="$(grep ^telegram-notification-title "${SCRIPT_CONF}" | cut -d= -f2- | sed "s|^[ \t]*||g;s|\r$||")"
+    TG_PROXY="$(grep ^telegram-proxy "${SCRIPT_CONF}" | cut -d= -f2- | sed "s|^[ \t]*||g;s|\r$||")"
     if [ "${TELEGRAM_CHAT_ID}" != "" ]; then
         if [ "${TG_PROXY}" != "" ]; then
             PROXY_PARAM="-x ${TG_PROXY}"
         fi
         if [ "${GLOBAL_LANGUAGE}" = "chs" ]; then
-            msgbody="Dyno 已启动"
+            msgbody="容器已启动"
         else
-            msgbody="Dyno started"
+            msgbody="Container started"
         fi
-        title="Heroku"
+        title="$TELEGRAM_TITLE"
         timestamp="$(date +"%m/%d %H:%M:%S")"
         msg="$title $timestamp\n$(echo "$msgbody" | sed -e 's|\\|\\\\|g' -e 's|\n|\\n|g' -e 's|\t|\\t|g' -e 's|\"|\\"|g')"
         entities="[{\"offset\":0,\"length\":${#title},\"type\":\"bold\"},{\"offset\":$((${#title} + 1)),\"length\":${#timestamp},\"type\":\"italic\"}]"
@@ -58,4 +59,4 @@ fi
 
 SEND_TG_MSG
 
-exec runsvdir -P /etc/service
+exec runsvdir /etc/service

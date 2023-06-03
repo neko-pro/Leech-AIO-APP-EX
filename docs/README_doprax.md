@@ -1,10 +1,11 @@
 ## Attention
 
  1. **Do not abuse service from Doprax or your account could get banned. Deploy at your own risk.**
- 2. Aria2 & qBittorrent download speed is limited to 5MB/s on default.
- 3. Container filesystem is ephemeral - that means that any changes to the filesystem except volume mounted on /mnt/data/config whilst the dyno is running only last until that container is shut down or restarted.
- 4. It is not possible to configure a Rclone remote which requires web authentication through Rclone web UI in this app.
- 5. No Rclone mount support.
+ 2. **High disk usage will likely get your account banned.**
+ 3. Aria2 & qBittorrent download speed is limited to 5MB/s on default.
+ 4. Container filesystem is ephemeral - that means that any changes to the filesystem except volume mounted on /mnt/data/config whilst the dyno is running only last until that container is shut down or restarted.
+ 5. It is not possible to configure a Rclone remote which requires web authentication through Rclone Web UI in this app. You need to prepare rclone.conf file on other devices.
+ 6. No Rclone mount support.
 
 
 [Overview](#Overview)
@@ -35,7 +36,7 @@ This project integrates yt-dlp, gallery-dl, Aria2 + WebUI, qBittorrent + VueTorr
  **Do not deploy directly from this repository** 
 
  1. Fork this this repository (uncheck "Copy the main branch only"), then click Setting on fork repository page and check Template repository.
- 2. Click new button: Use this template，create a new repository。
+ 2. Go back to "Code" tab. Then Click new button: Use this template，create a new repository.
  3. Go to Setting tab on your new repo，Click "Branches"，set default branch to "doprax".
  
     <details>
@@ -81,6 +82,8 @@ This project integrates yt-dlp, gallery-dl, Aria2 + WebUI, qBittorrent + VueTorr
 ## <a id="first"></a>First run
 
    1. Visit your "App URL" + ${GLOBAL_PORTAL_PATH} to reach portal page.
+
+      If your doprax domain gives you 503 or timeout error, here's a [workaround](https://github.com/wy580477/Leech-AIO-APP-EX/issues/67#issuecomment-1425437513) by using cloudflared tunnel.
    2. Click AriaNg, then authentication failure warning will pop up, fill in Aria2 secret RPC token with password set during deployment.  
 
          <img src="https://user-images.githubusercontent.com/98247050/165651080-b1b79ba6-7cc0-4c7c-b65b-fbc4256f59f9.png"  width="700"/>

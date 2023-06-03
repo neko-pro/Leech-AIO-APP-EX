@@ -1,8 +1,10 @@
+## Colab has banned this project, deployment will cause your google account unable to use Colab.
+
 ## Attention
 
  1. **Do not abuse service from Colab or your account could get banned. Deploy at your own risk.**
  2. Aria2 & qBittorrent download speed is limited to 5MB/s on default.
- 3. It is not possible to configure a Rclone remote which requires web authentication through Rclone web UI in this app.
+ 3. It is not possible to configure a Rclone remote which requires web authentication through Rclone web UI in this app. You need to prepare rclone.conf file on other devices.
 
 [Overview](#Overview)
 

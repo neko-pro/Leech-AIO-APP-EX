@@ -1,8 +1,11 @@
+## Colab 已经封禁此项目，部署会导致 google 账户无法使用 Colab，暂停维护。
+
+
 ## 注意
 
  1. **请勿滥用，Colab账号封禁风险自负。**
  2. Aria2和qBittorrent配置文件默认限速5MB/s。
- 3. 无法通过Rclone Web前端建立需要网页认证的存储配置。
+ 3. 无法通过Rclone Web前端建立需要网页认证的存储配置。需要自行在其他设备上准备好rclone.conf文件。
 
 [概述](#概述)
 
